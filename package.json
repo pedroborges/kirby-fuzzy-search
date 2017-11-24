@@ -1,0 +1,8 @@
+{
+  "name": "fuse-search",
+  "author": "Pedro Borges <oi@pedroborg.es>",
+  "version": "1.0.0-alpha",
+  "description": "Kirby Fuse Search",
+  "type": "kirby-plugin",
+  "license": "MIT"
+}
