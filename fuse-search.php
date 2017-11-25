@@ -28,9 +28,14 @@ if (! function_exists('fuseSearch')) {
         }
 
         $fuse = new Fuse\Fuse($data, array_merge([
+            'id' => c::get('fuse-search.caseSensitive', null),
+            'caseSensitive' => c::get('fuse-search.caseSensitive', false),
             'includeScore' => c::get('fuse-search.includeScore', true),
             'shouldSort' => c::get('fuse-search.shouldSort', true),
-            'threshold' => c::get('fuse-search.threshould', 0.6)
+            'threshold' => c::get('fuse-search.threshould', 0.6),
+            'distance' => c::get('fuse-search.distance', 100),
+            'tokenize' => c::get('fuse-search.tokenize', false),
+            'findAllMatches' => c::get('fuse-search.findAllMatches', false)
         ], $options));
 
         $results = $fuse->search($query);
