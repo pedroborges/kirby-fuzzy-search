@@ -17,6 +17,10 @@ class ComposerStaticInit54c64aa3fff50a07b50e941ee15525a3
     );
 
     public static $prefixLengthsPsr4 = array (
+        'k' => 
+        array (
+            'kevinfiol\\fuzzget\\' => 18,
+        ),
         'F' => 
         array (
             'Fuse\\' => 5,
@@ -24,6 +28,10 @@ class ComposerStaticInit54c64aa3fff50a07b50e941ee15525a3
     );
 
     public static $prefixDirsPsr4 = array (
+        'kevinfiol\\fuzzget\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/kevinfiol/fuzzget/src',
+        ),
         'Fuse\\' => 
         array (
             0 => __DIR__ . '/..' . '/loilo/fuse/src',

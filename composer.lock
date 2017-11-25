@@ -4,8 +4,44 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "da0477aa0efbd9ecddfc65c3d3e3a85e",
+    "content-hash": "407133711c0a130fa68cd6ffc52e38ac",
     "packages": [
+        {
+            "name": "kevinfiol/fuzzget",
+            "version": "dev-master",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/kevinfiol/fuzzget.git",
+                "reference": "a8772f38ec8510adbba391c4273d9cf67445b90e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/kevinfiol/fuzzget/zipball/a8772f38ec8510adbba391c4273d9cf67445b90e",
+                "reference": "a8772f38ec8510adbba391c4273d9cf67445b90e",
+                "shasum": ""
+            },
+            "require-dev": {
+                "squizlabs/php_codesniffer": "3.*"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "kevinfiol\\fuzzget\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Kevin Fiol",
+                    "email": "fiolkevin@gmail.com"
+                }
+            ],
+            "description": "fuzzy search an array of associative arrays",
+            "time": "2017-11-01T17:33:45+00:00"
+        },
         {
             "name": "loilo/fuse",
             "version": "3.2.1",
@@ -57,8 +93,10 @@
     ],
     "packages-dev": [],
     "aliases": [],
-    "minimum-stability": "stable",
-    "stability-flags": [],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "kevinfiol/fuzzget": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": [],

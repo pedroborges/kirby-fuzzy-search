@@ -1,5 +1,7 @@
 {
+    "minimum-stability": "dev",
     "require": {
-        "loilo/fuse": "^3.2"
+        "loilo/fuse": "^3.2",
+        "kevinfiol/fuzzget": "dev-master"
     }
 }
