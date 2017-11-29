@@ -75,8 +75,8 @@ $countries = [
 $results = fuzzySearch($countries, 'Brasil');
 ```
 
-## Advance Usage
-If you leave the last parameter out, Fuzzy Search will search through all keys (fields) in the provided data:
+## Advanced Usage
+If you leave out the last parameter, Fuzzy Search will search through all keys (fields) in the provided data:
 
 ```php
 site()->index()->fuzzySearch($query);
