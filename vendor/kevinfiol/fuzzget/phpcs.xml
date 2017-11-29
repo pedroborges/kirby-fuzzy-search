@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<ruleset name="PHP_CodeSniffer">
+    <description />
+
+    <file>.</file>
+
+    <arg name="extensions" value="php,inc,lib"/>
+    <arg value="n"/>
+
+    <rule ref="PEAR">
+        <exclude name="PEAR.Functions.FunctionCallSignature.ContentAfterOpenBracket"/>
+        <exclude name="PEAR.Functions.FunctionCallSignature.CloseBracketLine"/>
+        <exclude name="PEAR.WhiteSpace.ScopeIndent"/>
+    </rule>
+</ruleset>

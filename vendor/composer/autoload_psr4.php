@@ -7,5 +7,5 @@ $baseDir = dirname($vendorDir);
 
 return array(
     'kevinfiol\\fuzzget\\' => array($vendorDir . '/kevinfiol/fuzzget/src'),
-    'Fuse\\' => array($vendorDir . '/loilo/fuse/src'),
+    'PedroBorges\\FuzzySearch\\' => array($baseDir . '/src'),
 );

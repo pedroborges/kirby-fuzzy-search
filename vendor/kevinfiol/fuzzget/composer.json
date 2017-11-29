@@ -1,0 +1,22 @@
+{
+    "name": "kevinfiol/fuzzget",
+    "description": "fuzzy search an array of associative arrays",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Kevin Fiol",
+            "email": "fiolkevin@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "require": {},
+    "require-dev": {
+        "squizlabs/php_codesniffer": "3.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "kevinfiol\\fuzzget\\": "src/"
+        }
+    }
+}

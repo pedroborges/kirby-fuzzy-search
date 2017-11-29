@@ -1,7 +1,11 @@
 {
+    "autoload": {
+        "psr-4": {
+            "PedroBorges\\FuzzySearch\\": "src/"
+        }
+    },
     "minimum-stability": "dev",
     "require": {
-        "loilo/fuse": "^3.2",
         "kevinfiol/fuzzget": "dev-master"
     }
 }
