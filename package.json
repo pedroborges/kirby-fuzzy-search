@@ -1,8 +1,8 @@
 {
-  "name": "fuse-search",
+  "name": "fuzzy-search",
   "author": "Pedro Borges <oi@pedroborg.es>",
-  "version": "1.0.0-alpha",
-  "description": "Kirby Fuse Search",
+  "version": "1.0.0-beta",
+  "description": "Kirby Fuzzy Search",
   "type": "kirby-plugin",
   "license": "MIT"
 }

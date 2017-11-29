@@ -1,11 +1,11 @@
-# Kirby Fuse Search (In Development) [![Release](https://img.shields.io/github/release/pedroborges/kirby-fuse-search.svg)](https://github.com/pedroborges/kirby-fuse-search/releases) [![Issues](https://img.shields.io/github/issues/pedroborges/kirby-fuse-search.svg)](https://github.com/pedroborges/kirby-fuse-search/issues)
+# Kirby Fuzzy Search (Beta) [![Release](https://img.shields.io/github/release/pedroborges/kirby-fuzzy-search.svg)](https://github.com/pedroborges/kirby-fuzzy-search/releases) [![Issues](https://img.shields.io/github/issues/pedroborges/kirby-fuzzy-search.svg)](https://github.com/pedroborges/kirby-fuzzy-search/issues)
 
-Fuzzy-search plugin for Kirby based on the [Bitap](https://en.wikipedia.org/wiki/Bitap_algorithm) algorithm.
+Fuzzy-search plugin for Kirby. Looking for approximate matches of search queries in your content has never been this easy.
 
-This is plugin is built on top of [Fuse](https://github.com/Loilo/Fuse), the PHP port of the awesome [Fuse.js](https://github.com/krisk/fuse) project.
+This is plugin is built on top of the [fuzzget](https://github.com/kevinfiol/fuzzget) PHP library.
 
 ## Basic Usage
-If you are already using Kirby built-in `search` method, replacing it with Fuse Search is as easy as renaming the method on a page collection:
+If you are already using the Kirby built-in `search` method, replacing it with Fuzzy Search is just a matter of renaming a method on a pages collection:
 
 ```diff
 $query    = get('q');
@@ -13,18 +13,21 @@ $articles = page('blog')
     ->children()
     ->visible()
 -   ->search($query, 'title|text');
-+   ->fuseSearch($query, 'title|text');
++   ->fuzzySearch($query, 'title|text');
 ```
 
-Other than that, Fuse Search options are different from the ones of Kirby `search` method. **Soon** all available options will be documented here.
+Fuzzy Search **is not** compatible with any of the other options available on the Kirby `search` method.
 
-With Fuse Search you can also search through [custom page methods](https://getkirby.com/docs/developer-guide/objects/page) or [page models](https://getkirby.com/docs/developer-guide/advanced/models). You only need to include method name in the `fuseSearch` second parameter.
+With Fuzzy Search you can also search through [custom page methods](https://getkirby.com/docs/developer-guide/objects/page) or [page models](https://getkirby.com/docs/developer-guide/advanced/models). You only need to include the method name in the `fuzzySearch` last parameter.
 
 ```php
-page::$methods['authorFullName'] = function($page) {
-    $user = site()->user($page->author()->value());
+// site/plugins/methods.php
+page::$methods['authorName'] = function($page) {
+    $author = $page->author()->value();
 
-    return $user->firstname().' '.$user->lastname();
+    if ($user = site()->user($author)) {
+        return $user->firstname().' '.$user->lastname();
+    }
 };
 ```
 
@@ -33,29 +36,29 @@ $query    = get('q');
 $articles = page('blog')
     ->children()
     ->visible()
-    ->fuseSearch($query, 'title|text|authorFullName');
+    ->fuzzySearch($query, 'title|text|authorName');
 ```
 
 ### Searching through structured fields
-Fuse Search also comes a handy field method that lets you perform a search on a page field that contains a set of data.
+Fuzzy Search ships with a handy field method that allows you to search on page fields that contains set of data, such as [structured fields](https://getkirby.com/docs/cookbook/structured-field-content).
 
 ```php
 $result = page('faq')
     ->topics()
-    ->fuseSearch($query, 'question|answer');
+    ->fuzzySearch($query, 'question|answer');
 ```
 
-The `$result` will be a `Field` object and not just a simple array. That way you can chain any `Field` method, such as `toStructure`, `yaml`, or `isEmpty`, after searching for a term.
+The `$result` will also be a `Field` object and not just a simple array. That way you are free to chain any `Field` method, such as `toStructure`, `yaml`, or `isEmpty`, after doing a search.
 
 ```php
 $result = page('contact')
     ->addresses()
-    ->fuseSearch($query, 'city')
+    ->fuzzySearch($query, 'city')
     ->toStructure();
 ```
 
 ### Searching through arrays
-You also can use the `fuseSearch` function to search through any associative array.
+You also can use the `fuzzySearch` function to search through an array of associative arrays.
 
 ```php
 $countries = [
@@ -69,43 +72,89 @@ $countries = [
     ['name' => 'United States']
 ];
 
-$results = fuseSearch($countries, 'Brasil', 'name');
+$results = fuzzySearch($countries, 'Brasil');
 ```
 
-## Option
-These are the global options available for now. Check out the [Fuse options](https://github.com/Loilo/Fuse#options) to learn more about them.
+## Advance Usage
+If you leave the last parameter out, Fuzzy Search will search through all keys (fields) in the provided data:
 
 ```php
-c::get('fuse-search.includeScore', true);
-c::get('fuse-search.shouldSort', true);
-c::get('fuse-search.threshould', 0.6);
+site()->index()->fuzzySearch($query);
 ```
+
+It's the same as using the `*` wildcard.
+
+```php
+site()->index()->fuzzySearch($query, '*');
+```
+
+Fuzzy Search is very flexible when it comes to choosing which fields it should look for matches. Check out the other options:
+
+### Include
+If you want to search for a given term only in the `title` and `text` fields, just pass their names in the last parameter separated by `|`:
+
+```php
+site()->index()->fuzzySearch($query, 'title|text');
+```
+
+That is syntax sugar for:
+
+```php
+site()->index()->fuzzySearch($query, [
+    'include' => ['title', 'text']
+]);
+```
+
+### Ignore
+Of course you can also list fields you do not want to search through:
+
+```php
+site()->index()->fuzzySearch($query, '-author|-date');
+```
+
+The above is the same as doing:
+
+```php
+site()->index()->fuzzySearch($query, [
+    'ignore' => ['author', 'date']
+]);
+```
+
+In this example, all fields will be considered in the search except for `author` and `date`.
+
+If you need to include a custom page method or page model method, you can combine it with the wildcard and ignore syntax.
+
+```php
+site()->index()->fuzzySearch($query, '*|authorName|-date');
+```
+
+The above will include all fields but `date` along with `$page->authorName()`, in case it's a custom page method or page model method.
 
 ## Installation
 
 ### Requirements
 - Kirby 2.3.2+
-- PHP 5.6+
+- PHP 7.0+
 
 ### Download
-[Download the files](https://github.com/pedroborges/kirby-fuse-search/archive/master.zip) and place them inside `site/plugins/fuse-search`.
+[Download the files](https://github.com/pedroborges/kirby-fuzzy-search/archive/master.zip) and place them inside `site/plugins/fuzzy-search`.
 
 ### Kirby CLI
-Kirby's [command line interface](https://github.com/getkirby/cli) makes installing the Fuse Search plugin a breeze:
+Kirby's [command line interface](https://github.com/getkirby/cli) makes installing the Fuzzy Search plugin a breeze:
 
-    $ kirby plugin:install pedroborges/kirby-fuse-search
+    $ kirby plugin:install pedroborges/kirby-fuzzy-search
 
 Updating couldn't be any easier, simply run:
 
-    $ kirby plugin:update pedroborges/kirby-fuse-search
+    $ kirby plugin:update pedroborges/kirby-fuzzy-search
 
 ### Git Submodule
-You can add the Fuse Search plugin as a Git submodule.
+You can add the Fuzzy Search plugin as a Git submodule.
 
     $ cd your/project/root
-    $ git submodule add https://github.com/pedroborges/kirby-fuse-search.git site/plugins/fuse-search
+    $ git submodule add https://github.com/pedroborges/kirby-fuzzy-search.git site/plugins/fuzzy-search
     $ git submodule update --init --recursive
-    $ git commit -am "Add Fuse Search plugin"
+    $ git commit -am "Add Fuzzy Search plugin"
 
 Updating is as easy as running a few commands.
 
@@ -116,9 +165,9 @@ Updating is as easy as running a few commands.
     $ git submodule update --init --recursive
 
 ## Change Log
-All notable changes to this project will be documented at: <https://github.com/pedroborges/kirby-fuse-search/blob/master/changelog.md>
+All notable changes to this project will be documented at: <https://github.com/pedroborges/kirby-fuzzy-search/blob/master/changelog.md>
 
 ## License
-Fuse Search plugin is open-sourced software licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
+Fuzzy Search plugin is open-sourced software licensed under the [MIT license](http://www.opensource.org/licenses/mit-license.php).
 
 Copyright © 2017 Pedro Borges <oi@pedroborg.es>
