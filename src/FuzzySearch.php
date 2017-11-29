@@ -115,12 +115,12 @@ class FuzzySearch
             $fields = Str::split($fields, '|');
         }
 
-        $this->included = isset($fields['included'])
-            ? $fields['included']
+        $this->included = isset($fields['include'])
+            ? $fields['include']
             : $this->fieldsToInclude($fields);
 
-        $this->ignored = isset($fields['ignored'])
-            ? $fields['ignored']
+        $this->ignored = isset($fields['ignore'])
+            ? $fields['ignore']
             : $this->fieldsToIgnore($fields);
     }
 
