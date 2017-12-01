@@ -48,10 +48,10 @@ $kirby->set('pages::method', 'fuzzySearch', function(Pages $pages, string $query
 
     // Retrieve pages IDs from results
     // to rebuild Pages collection
-    $pageIDs = [];
+    $ids = [];
     foreach ($results as $page) {
-        $pageIDs[] = $page['id'];
+        $ids[] = $page['id'];
     }
 
-    return $pages->filterBy('id', 'in', $pageIDs);
+    return $pages->filterBy('id', 'in', $ids);
 });
