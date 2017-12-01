@@ -1,11 +1,11 @@
 # Kirby Fuzzy Search (Beta) [![Release](https://img.shields.io/github/release/pedroborges/kirby-fuzzy-search.svg)](https://github.com/pedroborges/kirby-fuzzy-search/releases) [![Issues](https://img.shields.io/github/issues/pedroborges/kirby-fuzzy-search.svg)](https://github.com/pedroborges/kirby-fuzzy-search/issues)
 
-Fuzzy-search plugin for Kirby. Looking for approximate matches of search queries in your content has never been this easy.
+Fuzzy-search plugin for Kirby. Searching for non-exact matches in your content has never been this easy.
 
 This is plugin is built on top of the [fuzzget](https://github.com/kevinfiol/fuzzget) PHP library.
 
 ## Basic Usage
-If you are already using the Kirby built-in `search` method, replacing it with Fuzzy Search is just a matter of renaming a method on a pages collection:
+If you are already using the Kirby built-in `search` method, replacing it with Fuzzy Search is just a matter of renaming the `search` method to `fuzzySearch` like shown below:
 
 ```diff
 $query    = get('q');
@@ -32,15 +32,17 @@ page::$methods['authorName'] = function($page) {
 ```
 
 ```php
-$query    = get('q');
 $articles = page('blog')
     ->children()
-    ->visible()
-    ->fuzzySearch($query, 'title|text|authorName');
+    ->visible();
+
+if ($query = get('q')) {
+    $articles = $articles->fuzzySearch($query, 'title|text|authorName');
+}
 ```
 
-### Searching through structured fields
-Fuzzy Search ships with a handy field method that allows you to search on page fields that contains set of data, such as [structured fields](https://getkirby.com/docs/cookbook/structured-field-content).
+### Searching on structured fields
+Fuzzy Search ships with a handy field method that allows you to search on [structured fields](https://getkirby.com/docs/cookbook/structured-field-content).
 
 ```php
 $result = page('faq')
@@ -48,7 +50,7 @@ $result = page('faq')
     ->fuzzySearch($query, 'question|answer');
 ```
 
-The `$result` will also be a `Field` object and not just a simple array. That way you are free to chain any `Field` method, such as `toStructure`, `yaml`, or `isEmpty`, after doing a search.
+The `$result` will also be a `Field` object and not just a simple array. That way you are free to chain any [Field method](https://getkirby.com/docs/cheatsheet#field-methods), such as `toStructure`, `yaml`, or `isEmpty`, after getting the search result.
 
 ```php
 $result = page('contact')
@@ -57,7 +59,7 @@ $result = page('contact')
     ->toStructure();
 ```
 
-### Searching through arrays
+### Searching on arrays
 You also can use the `fuzzySearch` function to search through an array of associative arrays.
 
 ```php
@@ -88,7 +90,7 @@ It's the same as using the `*` wildcard.
 site()->index()->fuzzySearch($query, '*');
 ```
 
-Fuzzy Search is very flexible when it comes to choosing which fields it should look for matches. Check out the other options:
+Fuzzy Search is very flexible when it comes to choosing in which fields it should look for matches. Check out the other options:
 
 ### Include
 If you want to search for a given term only in the `title` and `text` fields, just pass their names in the last parameter separated by `|`:
@@ -97,7 +99,7 @@ If you want to search for a given term only in the `title` and `text` fields, ju
 site()->index()->fuzzySearch($query, 'title|text');
 ```
 
-That is syntax sugar for:
+This is syntax sugar for:
 
 ```php
 site()->index()->fuzzySearch($query, [
@@ -106,13 +108,13 @@ site()->index()->fuzzySearch($query, [
 ```
 
 ### Ignore
-Of course you can also list fields you do not want to search through:
+Of course you can also list fields which you do not want to be searched:
 
 ```php
 site()->index()->fuzzySearch($query, '-author|-date');
 ```
 
-The above is the same as doing:
+The example above is the same as:
 
 ```php
 site()->index()->fuzzySearch($query, [
@@ -120,7 +122,7 @@ site()->index()->fuzzySearch($query, [
 ]);
 ```
 
-In this example, all fields will be considered in the search except for `author` and `date`.
+In this case, all fields will be considered in the search except for `author` and `date` fields.
 
 If you need to include a custom page method or page model method, you can combine it with the wildcard and ignore syntax.
 
@@ -128,7 +130,7 @@ If you need to include a custom page method or page model method, you can combin
 site()->index()->fuzzySearch($query, '*|authorName|-date');
 ```
 
-The above will include all fields but `date` along with `$page->authorName()`, in case it's a custom page method or page model method.
+In this example, all fields but the `date` field will be searched on. `$page->authorName()` will be used if it is either a custom page method or page model method.
 
 ## Installation
 
