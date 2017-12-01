@@ -34,8 +34,8 @@ if (! function_exists('fuzzySearch')) {
 $kirby->set('field::method', 'fuzzySearch', function(Field $field, string $query, $fields = []) {
     $results = fuzzySearch($field, $query, $fields);
 
-    // Return result as Field to allow
-    // for chaining of field methods
+    // Return search result as a Field object
+    // to allow for chaining of field methods
     return new Field(
         $field->page(),
         $field->key(),
