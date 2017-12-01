@@ -91,7 +91,7 @@ class FuzzySearch
     protected function filterContent(array $content)
     {
         // Do not filter content if wildcard
-        // was passed as first item
+        // is passed as first field item
         if (count($this->included) && $this->included[0] !== '*') {
             $content = array_filter($content, function($field) {
                 return in_array($field, $this->included);
@@ -134,7 +134,6 @@ class FuzzySearch
         $fields = array_filter($fields, function($field) {
             return ! is_array($field) && Str::startsWith($field, '-');
         });
-
 
         // Remove dash and return ignored fields
         return array_map(function($field) {
