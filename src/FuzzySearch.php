@@ -32,25 +32,23 @@ class FuzzySearch
         $data = $this->data;
 
         if (is_a($data, 'Collection')) {
-            return $this->pagesToArray($data);
+            return $this->transformPages($data);
         }
 
         if (is_a($data, 'Field')) {
-            return $this->fieldToArray($data);
+            return $this->transformArray($data->yaml());
         }
 
         if (! is_array($data)) {
             throw new InvalidArgumentException(
-                'Provided $data must be an array, instance of Pages or Field.'
+                'The $data provided must be an array, instance of Pages or Field objects.'
             );
         }
 
-        return array_map(function($content) {
-            return $this->filterContent($content);
-        }, $data);
+        return $this->transformArray($data);
     }
 
-    protected function pagesToArray(Pages $pages)
+    protected function transformPages(Pages $pages)
     {
         $data = array_map(function($page) {
             $content = $page->content()->toArray();
@@ -83,11 +81,11 @@ class FuzzySearch
         return array_values($data);
     }
 
-    protected function fieldToArray(Field $field)
+    protected function transformArray(array $data)
     {
         return array_map(function($content) {
             return $this->filterContent($content);
-        }, $field->yaml());
+        }, $data);
     }
 
     protected function filterContent(array $content)
