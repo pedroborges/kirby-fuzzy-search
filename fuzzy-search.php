@@ -31,7 +31,11 @@ if (! function_exists('fuzzySearch')) {
     }
 }
 
-$kirby->set('field::method', 'fuzzySearch', function(Field $field, string $query, $fields = []) {
+$kirby->set('field::method', 'fuzzySearch', function(Field $field, $query, $fields = []) {
+    if (empty(trim($query)) or $field->isEmpty()) {
+        return new Field($field->page(), $field->key(), null);
+    }
+
     $results = fuzzySearch($field, $query, $fields);
 
     // Return search result as a Field object
@@ -43,7 +47,11 @@ $kirby->set('field::method', 'fuzzySearch', function(Field $field, string $query
     );
 });
 
-$kirby->set('pages::method', 'fuzzySearch', function(Pages $pages, string $query, $fields = []) {
+$kirby->set('pages::method', 'fuzzySearch', function(Pages $pages, $query, $fields = []) {
+    if (empty(trim($query)) or ! $pages->count()) {
+        return $pages->limit(0);
+    }
+
     $results = fuzzySearch($pages, $query, $fields);
 
     // Retrieve pages IDs from results
