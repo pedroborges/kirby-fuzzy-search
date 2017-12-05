@@ -16,6 +16,10 @@ $kirby->set('field::method', 'fuzzySearch', function(Field $field, $query, $fiel
     );
 });
 
+$kirby->set('page::method', 'fuzzySearch', function(Page $page, $query, $fields = []) {
+    return $page->children()->index()->fuzzySearch($query, $fields);
+});
+
 $kirby->set('pages::method', 'fuzzySearch', function(Pages $pages, $query, $fields = []) {
     if (empty(trim($query)) or ! $pages->count()) {
         return $pages->limit(0);
