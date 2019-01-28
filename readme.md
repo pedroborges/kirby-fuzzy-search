@@ -2,7 +2,7 @@
 
 Fuzzy-search plugin for Kirby. Looking for approximate matches of search queries in your content has never been this easy.
 
-This is plugin is built on top of the [fuzzget](https://github.com/kevinfiol/fuzzget) PHP library.
+This is plugin is built on top of the [fuzzget](https://gitlab.com/kevinfiol/fuzzget) PHP library.
 
 ## Basic Usage
 If you are already using the Kirby built-in `search` method, replacing it with Fuzzy Search is just a matter of renaming a method on a pages collection:
